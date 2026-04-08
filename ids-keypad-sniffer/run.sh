@@ -13,7 +13,7 @@ cat > /tmp/sniffer_config.yaml <<EOF
 serial:
   port: "${SERIAL_PORT}"
   baud_rate: ${BAUD_RATE}
-log_dir: /data/captures
+log_dir: /share/ids_sniffer
 frame_gap_ms: ${FRAME_GAP}
 EOF
 

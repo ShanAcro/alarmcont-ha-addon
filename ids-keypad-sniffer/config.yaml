@@ -15,6 +15,9 @@ init: false
 uart: true
 usb: true
 
+map:
+  - share:rw
+
 options:
   serial_port: /dev/ttyUSB0
   baud_rate: 9600
