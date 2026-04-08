@@ -1,0 +1,26 @@
+name: IDS Keypad Bus Sniffer
+version: "1.0.0"
+slug: ids_keypad_sniffer
+description: Passively captures IDS X64 D+/D- keypad bus traffic for protocol analysis
+url: https://github.com/shanacro/alarmcont-ha-addon
+arch:
+  - aarch64
+  - amd64
+  - armv7
+
+startup: application
+boot: manual
+init: false
+
+uart: true
+usb: true
+
+options:
+  serial_port: /dev/ttyUSB0
+  baud_rate: 9600
+  frame_gap_ms: 5
+
+schema:
+  serial_port: str
+  baud_rate: int
+  frame_gap_ms: int
