@@ -6,6 +6,7 @@ Reads the IDS X64 keypad bus via a USB-to-RS485 adapter and publishes
 partition/zone/trouble/event state to MQTT with Home Assistant Discovery.
 Subscribes to command topics for arm/disarm control.
 
+IDS X64 RS485 keypad bus protocol implementation.
 """
 
 import json
@@ -45,7 +46,7 @@ PARTITION_STRINGS = {
     PART_ALARM: "ALARM",
 }
 
-# ── Event name table ────────────
+# ── Event name table ─────────────────────────────────────────────
 EVENT_NAMES = [
     "All Doors",
     "Door 1", "Door 2", "Door 3", "Door 4",
@@ -292,7 +293,7 @@ class IdsX64MqttBridge:
             if self.ser and self.ser.is_open:
                 self.ser.write(packet)
                 self.ser.flush()
-                log.debug("TX: %s", packet.hex())
+                log.info("TX: %s", packet.hex())
 
     # ── MQTT ─────────────────────────────────────────────────────
     def connect_mqtt(self):
@@ -524,7 +525,7 @@ class IdsX64MqttBridge:
         plen = (pkt[3] << 8) | pkt[4]
         payload = pkt[5 : 5 + plen]
 
-        log.debug("RX type=0x%02X len=%d payload=%s", ptype, plen, payload.hex())
+        log.info("RX type=0x%02X len=%d payload=%s", ptype, plen, payload.hex())
 
         # ── Partition status (type=0x00) ─────────────────────────
         if ptype == 0x00 and plen >= 1:
@@ -624,13 +625,17 @@ class IdsX64MqttBridge:
             try:
                 if self.ser and self.ser.is_open:
                     data = self.ser.read(128)
+                    if data:
+                        log.info("RX raw (%d bytes): %s", len(data), data.hex())
                     for b in data:
                         self.rx_byte(b)
             except serial.SerialException:
-                log.exception("Serial read error")
+                if self.running:
+                    log.exception("Serial read error")
                 time.sleep(1)
             except Exception:
-                log.exception("Error in read loop")
+                if self.running:
+                    log.exception("Error in read loop")
                 time.sleep(0.1)
 
     def run(self):
