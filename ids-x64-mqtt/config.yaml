@@ -1,0 +1,39 @@
+name: IDS X64 MQTT Bridge
+version: "1.0.0"
+slug: ids_x64_mqtt
+description: MQTT bridge for IDS X64 alarm panel via USB-RS485 adapter
+url: https://github.com/YOUR_USERNAME/alarmcont
+arch:
+  - aarch64
+  - amd64
+  - armv7
+
+startup: application
+boot: auto
+init: false
+
+# Allow access to USB-RS485 serial adapter
+uart: true
+usb: true
+
+options:
+  serial_port: /dev/ttyUSB0
+  mqtt_broker: core-mosquitto
+  mqtt_port: 1883
+  mqtt_username: ""
+  mqtt_password: ""
+  mqtt_topic_prefix: ids_x64
+  num_partitions: 4
+  num_zones: 16
+  poll_interval: 10
+
+schema:
+  serial_port: str
+  mqtt_broker: str
+  mqtt_port: port
+  mqtt_username: str
+  mqtt_password: password
+  mqtt_topic_prefix: str
+  num_partitions: int
+  num_zones: int
+  poll_interval: int
